@@ -20,7 +20,7 @@ fn main() {
     */
 
     Command::new("ar")
-        .args(&["crus", "libgpu.a", "vectorAdd.o"])
+        .args(&["crus", "libvectorAdd.a", "vectorAdd.o"])
         .current_dir(&Path::new(&out_dir))
         .status()
         .unwrap();
@@ -28,5 +28,5 @@ fn main() {
     println!("cargo:rustc-link-search=native=/opt/cuda/lib64");
     println!("cargo:rustc-link-lib=cudart");
     println!("cargo:rustc-link-search=native={}", out_dir);
-    println!("cargo:rustc-link-lib=static=gpu");
+    println!("cargo:rustc-link-lib=static=vectorAdd");
 }
