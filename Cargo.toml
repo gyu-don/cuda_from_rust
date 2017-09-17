@@ -1,0 +1,8 @@
+[package]
+authors = ["gyu-don <takumi.kt+git@gmail.com>"]
+name = "callcuda"
+version = "0.1.0"
+build = "build.rs"
+
+[dependencies]
+libc = "0.2.30"
