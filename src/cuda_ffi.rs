@@ -23,7 +23,10 @@ pub struct Error {
 }
 impl Debug for Error {
     fn fmt(&self, f: &mut Formatter) -> result::Result<(), fmt::Error> {
-        write!(f, "{}", unsafe { CStr::from_ptr(cuda_runtime::cudaGetErrorString(self.raw)) }.to_string_lossy())
+        write!(f,
+               "{}",
+               unsafe { CStr::from_ptr(cuda_runtime::cudaGetErrorString(self.raw)) }
+                   .to_string_lossy())
     }
 }
 impl Error {
@@ -87,11 +90,16 @@ pub fn configure_call(grid_dim: dim3, block_dim: dim3, shared_mem: usize) -> Res
 pub fn launch(func: *const raw::c_void,
               grid_dim: dim3,
               block_dim: dim3,
-              args: *mut *mut raw::c_void,
+              args: &mut [*mut raw::c_void],
               shared_mem: usize)
               -> Result<()> {
     let cuda_error = unsafe {
-        cuda_runtime::cudaLaunchKernel(func, grid_dim, block_dim, args, shared_mem, null_mut())
+        cuda_runtime::cudaLaunchKernel(func,
+                                       grid_dim,
+                                       block_dim,
+                                       args.as_mut_ptr(),
+                                       shared_mem,
+                                       null_mut())
     };
     if cuda_error == cuda_runtime::cudaError::cudaSuccess {
         Ok(())

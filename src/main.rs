@@ -52,15 +52,13 @@ fn main() {
     */
 
     /* Alternative way. It doesn't contains deprecated API, but very complex. */
-    let mut args: Vec<*mut c_void> = vec![];
-    args.push(&mut d_a as *mut *mut f32 as *mut c_void);
-    args.push(&mut d_b as *mut *mut f32 as *mut c_void);
-    args.push(&mut d_c as *mut *mut f32 as *mut c_void);
-    args.push(&n_int as *const c_int as *mut c_int as *mut c_void);
     cuda_ffi::launch(vectorAdd as *const c_void,
                      griddim,
                      blockdim,
-                     args.as_mut_ptr(),
+                     &mut [&mut d_a as *mut *mut f32 as *mut c_void,
+                           &mut d_b as *mut *mut f32 as *mut c_void,
+                           &mut d_c as *mut *mut f32 as *mut c_void,
+                           &n_int as *const c_int as *mut c_int as *mut c_void],
                      sharedmem)
         .unwrap();
 
